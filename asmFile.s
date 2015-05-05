@@ -6,7 +6,6 @@ numB:     .word 24
 .text
 ; start of code space
 main:   
-        ; r1 is the loop counter.  Fill it with the number of data words in the vector.
         daddi r2, r0, veclength  ; r2 points to the vector length data.
         ld r1, 0(r2)            ; load the vector length into r1.
 
@@ -23,5 +22,5 @@ main:
         ;Using r16 as sum register. Set it to zero
         dadd r16, r0, r0
 
-        ; stop execution.
+        ; stop execution
         syscall 0
