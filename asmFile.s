@@ -1,26 +1,22 @@
 .data     
 ; start of data space
-numA:     .word 12
-numB:     .word 24
+numA:   .word   12
+numB:   .word   24
+numC:   .word   0
 
 .text
 ; start of code space
 main:   
-        daddi r2, r0, veclength  ; r2 points to the vector length data.
-        ld r1, 0(r2)            ; load the vector length into r1.
+        ; Load data
+        Read_mem r1, numA
+        Read_mem r2, numB
 
-        ;Load XOR constant into R24
-        daddi r2, r0, convertConstant
-        ld r24, 0(r2)
+        ;Add numbers together
+        Add r3, r1, r2
 
-        ;Load address of vectorA into r2
-        daddi r2, r0, vectorAdata
+        ; Store data back
+        Write_mem numC, r3
 
-        ;Load address of vectorB into r3
-        daddi r3, r0, vectorBdata
-
-        ;Using r16 as sum register. Set it to zero
-        dadd r16, r0, r0
-
+        
         ; stop execution
-        syscall 0
+        Syscall 0
