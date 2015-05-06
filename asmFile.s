@@ -1,22 +1,11 @@
-.data     
-; start of data space
-numA:   .word   12
-numB:   .word   24
-numC:   .word   0
-
-.text
-; start of code space
-main:   
-        ; Load data
-        Read_mem r1, numA
-        Read_mem r2, numB
-
-        ;Add numbers together
-        Add r3, r1, r2
-
-        ; Store data back
-        Write_mem numC, r3
-
-        
-        ; stop execution
-        Syscall 0
+; Put data in registers
+; Set r1 to 12
+Addi r1, r0, 0x0000000C
+; Set r2 to 24
+Add r2, r1, r1
+; Multiply r2 by 2, r3 should be 48
+Multi r3, r2, 0x00000002
+; Store data to memory
+Write_mem numC, r3      
+; stop execution
+Syscall 0
