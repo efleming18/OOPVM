@@ -120,6 +120,8 @@ int main(int argc, char* argv[]){
 				ofInstruction = Instruction::store;
 			}else if(instructionType == "Load"){
 				ofInstruction = Instruction::load;
+			/*}else if(instructionType == "Endprog"){
+				ofInstruction = Instruction::endProg;*/
 			}else{
 				std::cout << "Unknown Type: " << instructionType << std::endl;
 			}
@@ -129,6 +131,11 @@ int main(int argc, char* argv[]){
 			Instruction in;
 			in.type = ofInstruction;
 			switch(ofInstruction){
+				/*case Instruction::endProg:
+					in.op.ai.write_reg = 0;
+					in.op.ai.reg_a = 0;
+					in.op.ai.reg_b = 0;
+					break;*/
 				case Instruction::add:
 					//This has 3 args, parse them
 					out = parseRegister(currentInstruction,stringPointer);

@@ -42,7 +42,7 @@ struct Access
 
 struct Instruction
 {
- enum instType { add, addi, sub, subi, mult, multi, div, divi, load, store, bnez, beqz, jump } type;
+ enum instType { add, addi, sub, subi, mult, multi, div, divi, load, store, bnez, beqz, jump, endProg } type;
  union 
  	{
 	 	Immd_arithmetic_inst iai;
