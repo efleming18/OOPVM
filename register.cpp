@@ -3,13 +3,15 @@
 #include <cassert>
 
 registerIF::registerIF()
+    : stackReg(0)
+    , pcReg(0)
 {
     data.insert(std::pair<int, int>(0, 1));
 }
 
 void registerIF::store(int reg, int val)
 {
-    if (reg == 0)
+    if (reg <= 0)
     {
         assert(false);
         return;
@@ -25,6 +27,8 @@ void registerIF::store(int reg, int val)
 
 int registerIF::value(int reg)
 {
+    assert(reg >= 0);
+
     if (data.find(reg) == data.end())
     {
         data.insert(std::pair<int, int>(reg, 1));

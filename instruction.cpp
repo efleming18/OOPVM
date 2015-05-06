@@ -39,7 +39,7 @@ mult::mult(int write_reg, int reg_a, int reg_b)
 	store(write_reg, result);
 }
 
-mult::milti (int write_reg, int reg_a, int immd)
+mult::multi (int write_reg, int reg_a, int immd)
 {
 	int result;
 	result = value(reg_a) * immd;

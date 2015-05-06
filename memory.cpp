@@ -1,12 +1,11 @@
 #include "memory.hpp"
 
+#include <cassert>
+
 memory::memory()
 	: data(1 << 10)
 {
-    for (char i = 0; i < data.size(); ++i)
-    {
-        data.at(i) = i;
-    }
+
 }
 
 memory::memory(int size)
@@ -17,12 +16,14 @@ memory::memory(int size)
 
 int memory::readByte(int index)
 {
+    assert(index >= 0);
 	resize(index);
 	return data.at(index);
 }
 
 int memory::readWord(int index)
 {
+    assert(index >= 0);
 	resize(index+3);
 
 	int retval = 0;
@@ -38,12 +39,14 @@ int memory::readWord(int index)
 
 void memory::writeByte(int index, unsigned char d)
 {
+    assert(index >= 0);
 	resize(index);
 	data.at(index) = d;
 }
 
 void memory::writeWord(int index, int d)
 {
+    assert(index >= 0);
 	resize(index+3);
 
 	for (int i = 0; i < 4; ++i)
@@ -52,7 +55,7 @@ void memory::writeWord(int index, int d)
 	}
 }
 
-void memory::resize(int index)
+void memory::resize(unsigned int index)
 {
 	if (index >= data.size())
 	{

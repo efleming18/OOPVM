@@ -19,9 +19,9 @@ public:
 	void writeWord(int index, int d);
 
 private:
-	void resize(int index);
+    void resize(unsigned int index);
 
 	std::vector<unsigned char> data;
 };
 
-#endif MEMORY_H
+#endif
