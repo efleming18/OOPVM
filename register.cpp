@@ -19,7 +19,7 @@ void registerIF::store(int reg, int val)
 
     if (data.find(reg) == data.end())
     {
-        data.insert(std::pair<int, int>(reg, 1));
+        data.insert(std::pair<int, int>(reg, 0));
     }
 
     data.find(reg)->second = val;
@@ -31,7 +31,7 @@ int registerIF::value(int reg)
 
     if (data.find(reg) == data.end())
     {
-        data.insert(std::pair<int, int>(reg, 1));
+        data.insert(std::pair<int, int>(reg, 0));
     }
 
     return data.at(reg);

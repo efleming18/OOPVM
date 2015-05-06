@@ -4,6 +4,7 @@
 #ifndef INSTRUCTION_H
 #define INSTRUCTION_H
 
+#include <string>
 #include <vector>
 
 class machine;
@@ -41,7 +42,7 @@ struct Access
 
 struct Instruction
 {
- enum { add, addi, sub, subi, mult, multi, div, divi, load, store, bnez, beqz, jump } type;
+ enum instType { add, addi, sub, subi, mult, multi, div, divi, load, store, bnez, beqz, jump } type;
  union 
  	{
 	 	Immd_arithmetic_inst iai;
@@ -54,7 +55,8 @@ struct Instruction
 
 void execute(Instruction i, machine* m);
 
-typedef std::vector<Instruction> Program;
+typedef std::vector<Instruction> program;
+program build(std::string file);
 
 /*
 struct instruction

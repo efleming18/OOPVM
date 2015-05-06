@@ -3,6 +3,8 @@
 #include <iostream>
 #include "instruction.hpp"
 #include <cstdio>
+#include <fstream>
+#include <cassert>
 #include "machine.hpp"
 
 void movePC(machine* m, int target);
@@ -71,7 +73,7 @@ void Load(Instruction i, machine* m)
 
 void Store(Instruction i, machine* m)
 {
-    m->mem()->writeWord(i.op.ac.memory, i.op.ac.reg);
+    m->mem()->writeWord(i.op.ac.memory, m->reg()->value(i.op.ac.reg));
 }
 
 void Bnez(Instruction i, machine* m)
@@ -157,3 +159,113 @@ void execute(Instruction i, machine* m)
 	 		break;
      }
 };
+
+
+Instruction buildArith(int dest, int a, int b);
+Instruction buildImmed(int dest, int a, int i);
+Instruction buildAccess(int reg, int mem);
+Instruction buildBranch(int cond, int target);
+Instruction buildJump(int target);
+
+program build(std::string file)
+{
+    program retval;
+
+    std::vector<int> data;
+    std::ifstream f;
+    f.open(file.c_str());
+    assert(f.is_open());
+
+    int temp;
+    while (f >> temp)
+    {
+        data.push_back(temp);
+    }
+
+    for (unsigned int i = 0; i < data.size(); ++i)
+    {
+        Instruction::instType t = static_cast<Instruction::instType>(data.at(i));
+        Instruction inst;
+
+        switch(t)
+        {
+        case Instruction::add:
+        case Instruction::sub:
+        case Instruction::mult:
+        case Instruction::div:
+            inst = buildArith(data.at(i+1), data.at(i+2), data.at(i+3));
+            i += 3;
+            break;
+        case Instruction::addi:
+        case Instruction::subi:
+        case Instruction::multi:
+        case Instruction::divi:
+            inst = buildImmed(data.at(i+1), data.at(i+2), data.at(i+3));
+            i += 3;
+            break;
+        case Instruction::load:
+        case Instruction::store:
+            inst = buildAccess(data.at(i+1), data.at(i+2));
+            i += 2;
+            break;
+        case Instruction::bnez:
+        case Instruction::beqz:
+            inst = buildBranch(data.at(i+1), data.at(i+2));
+            i += 2;
+            break;
+        case Instruction::jump:
+            inst = buildJump(data.at(i+1));
+            i += 1;
+            break;
+        default:
+            assert(false);
+            break;
+        }
+
+        inst.type = t;
+        retval.push_back(inst);
+    }
+
+    return retval;
+}
+
+Instruction buildArith(int dest, int a, int b)
+{
+    Instruction i;
+    i.op.ai.write_reg = dest;
+    i.op.ai.reg_a = a;
+    i.op.ai.reg_b = b;
+    return i;
+}
+
+Instruction buildImmed(int dest, int a, int i)
+{
+    Instruction inst;
+    inst.op.iai.write_reg = dest;
+    inst.op.iai.reg_a = a;
+    inst.op.iai.immd = i;
+    return inst;
+}
+
+Instruction buildAccess(int reg, int mem)
+{
+    Instruction i;
+    i.op.ac.reg = reg;
+    i.op.ac.memory = mem;
+    return i;
+}
+
+Instruction buildBranch(int cond, int target)
+{
+    Instruction i;
+    i.op.br.condition_reg = cond;
+    i.op.br.target = target;
+    return i;
+}
+
+Instruction buildJump(int target)
+{
+    Instruction i;
+    i.op.j.target = target;
+    return i;
+}

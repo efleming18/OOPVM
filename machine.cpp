@@ -20,10 +20,16 @@ registerIF* machine::reg()
 
 void machine::run()
 {
+    machine start = *this;
+
     while (const Instruction* i = fetch())
     {
+        machine temp = *this;
         execute(*i, this);
     }
+
+    machine final = *this;
+    int two = 2;
 }
 
 const Instruction* machine::fetch()

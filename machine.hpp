@@ -5,8 +5,6 @@
 #include "memory.hpp"
 #include "register.hpp"
 
-typedef std::vector<Instruction> program;
-
 
 class machine
 {
