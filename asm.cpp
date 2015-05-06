@@ -4,6 +4,37 @@
 #include <string>
 #include <sstream>
 
+//Used A. Sutton's write_bytecode and Binary_output_file
+struct Binary_output_file
+{
+  Binary_output_file(const char* f)
+    : file(fopen(f, "wb"))
+  {
+    if (!file)
+      throw std::runtime_error("cannot open output file");
+  }
+
+  ~Binary_output_file()
+  {
+    fclose(file);
+  }
+
+  template<typename T>
+  void write(T const* first, T const* last)
+  {
+    fwrite(&*first, sizeof(T), last - first, file);
+  }
+
+  FILE* file;
+};
+
+void write_bytecode(char const* f, program const& prog){
+  Binary_output_file file(f);
+  Instruction const* first = &prog.front();
+  Instruction const* last = first + prog.size();
+  file.write(first, last);
+}
+
 int parseRegister(std::string currentInstruction, int &stringPointer){
 	std::string reg;
 	//This should parse out r/R and just give a number
@@ -53,7 +84,7 @@ int main(int argc, char* argv[]){
 	std::ifstream asmFile;
 	char charInstruction[256];
 	std::vector<std::string> instructionVector;
-	Program instructionList;
+	program instructionList;
 	std::string currentInstruction;
 	asmFile.open(argv[1]);
 
@@ -76,7 +107,7 @@ int main(int argc, char* argv[]){
 			}
 			//Incrememnt pointer to get to first argument
 			stringPointer++;
-			Instruction::type ofInstruction;
+			Instruction::instType ofInstruction;
 			if(instructionType == "Add"){
 				ofInstruction = Instruction::add;
 			}else if(instructionType == "Addi"){
@@ -95,6 +126,7 @@ int main(int argc, char* argv[]){
 			std::cout << instructionType << " " << ofInstruction << std::endl;
 			//Now that we know the instruction type, need to get args
 			int out, in1, in2; //all registers
+			Instruction in;
 			switch(ofInstruction){
 				case Instruction::add:
 					//This has 3 args, parse them
@@ -104,6 +136,10 @@ int main(int argc, char* argv[]){
 					std::cout << out << std::endl;
 					std::cout << in1 << std::endl;
 					std::cout << in2 << std::endl;
+					in.op.ai.write_reg = out;
+					in.op.ai.reg_a = in1;
+					in.op.ai.reg_b = in2;
+					instructionList.push_back(in);
 					break;
 				case Instruction::addi:
 					//This has 3 args, parse them
@@ -113,7 +149,10 @@ int main(int argc, char* argv[]){
 					std::cout << out << std::endl;
 					std::cout << in1 << std::endl;
 					std::cout << in2 << std::endl;
-					break;
+					in.op.iai.write_reg = out;
+					in.op.iai.reg_a = in1;
+					in.op.iai.immd = in2;
+					instructionList.push_back(in);
 					break;
 				case Instruction::mult:
 					//This has 3 args, parse them
@@ -123,6 +162,10 @@ int main(int argc, char* argv[]){
 					std::cout << out << std::endl;
 					std::cout << in1 << std::endl;
 					std::cout << in2 << std::endl;
+					in.op.ai.write_reg = out;
+					in.op.ai.reg_a = in1;
+					in.op.ai.reg_b = in2;
+					instructionList.push_back(in);
 					break;
 				case Instruction::multi:
 					//This has 3 args, parse them
@@ -132,12 +175,19 @@ int main(int argc, char* argv[]){
 					std::cout << out << std::endl;
 					std::cout << in1 << std::endl;
 					std::cout << in2 << std::endl;
+					in.op.iai.write_reg = out;
+					in.op.iai.reg_a = in1;
+					in.op.iai.immd = in2;
+					instructionList.push_back(in);
 					break;
 				case Instruction::store:
 					out = parseImmediate(currentInstruction,stringPointer);
 					in1 = parseRegister(currentInstruction,stringPointer);
 					std::cout << out << std::endl;
 					std::cout << in1 << std::endl;
+					in.op.ac.reg = in1;
+					in.op.ac.memory = out;
+					instructionList.push_back(in);
 					break;
 				default:
 					std::cout << "Unknown type of instruction..." << std::endl;
@@ -145,7 +195,9 @@ int main(int argc, char* argv[]){
 			}
 			std::cout << std::endl;
 		}
-		
+
+		//Once done, output data to byte
+		write_bytecode("prog.o",instructionList);
 	}else{
 		std::cout << "Error opening file " << argv[1] << "..." << std::endl;
 	}
