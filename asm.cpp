@@ -123,7 +123,7 @@ int main(int argc, char* argv[]){
 			}else{
 				std::cout << "Unknown Type: " << instructionType << std::endl;
 			}
-			std::cout << instructionType << " " << ofInstruction << std::endl;
+			std::cout << ofInstruction << std::endl;
 			//Now that we know the instruction type, need to get args
 			int out, in1, in2; //all registers
 			Instruction in;
@@ -138,7 +138,6 @@ int main(int argc, char* argv[]){
 					std::cout << in1 << std::endl;
 					std::cout << in2 << std::endl;
 					in.op.ai.write_reg = out;
-
 					in.op.ai.reg_a = in1;
 					in.op.ai.reg_b = in2;
 					instructionList.push_back(in);
@@ -162,9 +161,9 @@ int main(int argc, char* argv[]){
 					out = parseRegister(currentInstruction,stringPointer);
 					in1 = parseRegister(currentInstruction,stringPointer);
 					in2 = parseRegister(currentInstruction,stringPointer);
-					//std::cout << out << std::endl;
-					//std::cout << in1 << std::endl;
-					//std::cout << in2 << std::endl;
+					std::cout << out << std::endl;
+					std::cout << in1 << std::endl;
+					std::cout << in2 << std::endl;
 					in.op.ai.write_reg = out;
 					in.op.ai.reg_a = in1;
 					in.op.ai.reg_b = in2;
@@ -175,9 +174,9 @@ int main(int argc, char* argv[]){
 					out = parseRegister(currentInstruction,stringPointer);
 					in1 = parseRegister(currentInstruction,stringPointer);
 					in2 = parseImmediate(currentInstruction,stringPointer);
-					//std::cout << out << std::endl;
-					//std::cout << in1 << std::endl;
-					//std::cout << in2 << std::endl;
+					std::cout << out << std::endl;
+					std::cout << in1 << std::endl;
+					std::cout << in2 << std::endl;
 					in.op.iai.write_reg = out;
 					in.op.iai.reg_a = in1;
 					in.op.iai.immd = in2;
@@ -186,8 +185,8 @@ int main(int argc, char* argv[]){
 				case Instruction::store:
 					out = parseImmediate(currentInstruction,stringPointer);
 					in1 = parseRegister(currentInstruction,stringPointer);
-					//std::cout << out << std::endl;
-					//std::cout << in1 << std::endl;
+					std::cout << out << std::endl;
+					std::cout << in1 << std::endl;
 					in.op.ac.reg = in1;
 					in.op.ac.memory = out;
 					instructionList.push_back(in);
