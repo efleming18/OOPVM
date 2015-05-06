@@ -2,7 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <stringstream>
+#include <sstream>
 
 int parseRegister(std::string currentInstruction, int &stringPointer){
 	std::string reg;
@@ -32,7 +32,15 @@ int parseImmediate(std::string currentInstruction, int &stringPointer){
 			break;
 		}
 	}
-	std::cout << "imm = " << imm << std::endl;
+
+	//Case for address
+	if(currentInstruction[stringPointer] == ','){
+		stringPointer++;
+	}
+	while(currentInstruction[stringPointer] == ' ' && stringPointer != *currentInstruction.end()){
+		stringPointer++;
+	}
+	//std::cout << "imm = " << imm << std::endl;
 	std::stringstream ss;
 	ss << std::hex << imm;
     ss >> returnValue;
@@ -126,7 +134,10 @@ int main(int argc, char* argv[]){
 					std::cout << in2 << std::endl;
 					break;
 				case Instruction::store:
-					std::cout << "Store case" << std::endl;
+					out = parseImmediate(currentInstruction,stringPointer);
+					in1 = parseRegister(currentInstruction,stringPointer);
+					std::cout << out << std::endl;
+					std::cout << in1 << std::endl;
 					break;
 				default:
 					std::cout << "Unknown type of instruction..." << std::endl;
