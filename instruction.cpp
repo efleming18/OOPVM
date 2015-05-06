@@ -3,159 +3,157 @@
 #include <iostream>
 #include "instruction.hpp"
 #include <cstdio>
-#include "stdio.h"
+#include "machine.hpp"
 
-Instruction i;
+void movePC(machine* m, int target);
 
 
-void Add()
-{
-	Instruction i;
-	int result;
-	result = value(i.op.ai.reg_a) + value(i.op.ai.reg_b);
-	store(i.op.ai.write_reg, result);
-}
-
-void Addi()
+void Add(Instruction i, machine* m)
 {
 	int result;
-	result = value(i.op.iai.reg_a) + i.op.iai.immd;
-	store(i.op.iai.write_reg, result);
+    result = m->reg()->value(i.op.ai.reg_a) + m->reg()->value(i.op.ai.reg_b);
+    m->reg()->store(i.op.ai.write_reg, result);
 }
 
-void Sub()
+void Addi(Instruction i, machine* m)
 {
 	int result;
-	result = value(i.op.ai.reg_a) - value(i.op.ai.reg_b);
-	store(i.op.ai.write_reg, result);	
+    result = m->reg()->value(i.op.iai.reg_a) + i.op.iai.immd;
+    m->reg()->store(i.op.iai.write_reg, result);
 }
 
-void Subi()
+void Sub(Instruction i, machine* m)
 {
 	int result;
-	result = value(i.op.iai.reg_a) - i.op.iai.immd;
-	store(i.op.iai.write_reg, result);	
+    result = m->reg()->value(i.op.ai.reg_a) - m->reg()->value(i.op.ai.reg_b);
+    m->reg()->store(i.op.ai.write_reg, result);
 }
 
-void Mult()
+void Subi(Instruction i, machine* m)
 {
 	int result;
-	result = value(i.op.ia.reg_a) * value(i.op.ia.reg_b);
-	store(i.op.ia.write_reg, result);	
+    result = m->reg()->value(i.op.iai.reg_a) - i.op.iai.immd;
+    m->reg()->store(i.op.iai.write_reg, result);
 }
 
-void Multi()
+void Mult(Instruction i, machine* m)
 {
 	int result;
-	result = value(i.op.iai.reg_a) * i.op.iai.immd;
-	store(i.op.iai.write_reg, result);	
+    result = m->reg()->value(i.op.ai.reg_a) * m->reg()->value(i.op.ai.reg_b);
+    m->reg()->store(i.op.ai.write_reg, result);
 }
 
-void Div()
+void Multi(Instruction i, machine* m)
 {
 	int result;
-	result = value(i.op.ai.reg_a) / value(i.op.ai.reg_b);
-	store(i.op.ai.write_reg, result);	
+    result = m->reg()->value(i.op.iai.reg_a) * i.op.iai.immd;
+    m->reg()->store(i.op.iai.write_reg, result);
 }
 
-void Divi()
+void Div(Instruction i, machine* m)
 {
 	int result;
-	result = value(i.op.iai.reg_a) / i.op.iai.immd;
-	store(i.op.iai.write_reg, result);
+    result = m->reg()->value(i.op.ai.reg_a) / m->reg()->value(i.op.ai.reg_b);
+    m->reg()->store(i.op.ai.write_reg, result);
 }
 
-void Load()
+void Divi(Instruction i, machine* m)
 {
-	i.op.ac.reg = readWord(i.op.ac.memory);
+	int result;
+    result = m->reg()->value(i.op.iai.reg_a) / i.op.iai.immd;
+    m->reg()->store(i.op.iai.write_reg, result);
 }
 
-void Store()
+void Load(Instruction i, machine* m)
 {
-	writeWord(i.op.ac.memory, i.op.ac.reg);
+    i.op.ac.reg = m->mem()->readWord(i.op.ac.memory);
 }
 
-void Bnez()
+void Store(Instruction i, machine* m)
 {
-	if (value(i.op.br.condition_reg) == 0)
-		i.op.j.jump(i.op.br.target);	
+    m->mem()->writeWord(i.op.ac.memory, i.op.ac.reg);
 }
 
-void Beqz()
+void Bnez(Instruction i, machine* m)
 {
-	if (value(type.br.condition_reg) != 0)
-		i.op.j.jump(i.op.br.target);	
+    if (m->reg()->value(i.op.br.condition_reg) == 0)
+        movePC(m, i.op.br.target);
 }
 
-void Jump()
+void Beqz(Instruction i, machine* m)
 {
-	//This isnt c++ need to write someting to access vector at target
-	//myvector.at(target);	
+    if (m->reg()->value(i.op.br.condition_reg) != 0)
+        movePC(m, i.op.br.target);
+}
+
+void Jump(Instruction i, machine* m)
+{
+    movePC(m, i.op.br.target);
+}
+
+void movePC(machine *m, int target)
+{
+    *(m->reg()->pc()) = target;
 }
 
 
-int main() {
-
-	fread(file, &i, sizeof(i), 1);
-
-
-		 switch(i.type)
+void execute(Instruction i, machine* m)
+{
+    switch(i.type)
 	 {
 	 	case Instruction::add:
-	 		Add();
+            Add(i, m);
 	 		//std::cout << op.uadd << endl;
 	 		break;
 	 	case Instruction::addi:
-	 		Addi();
+            Addi(i, m);
 	 		//std::cout << op.uaddi << endl;
 	 		break;
 	 	case Instruction::sub:
-	 		Sub();
+            Sub(i, m);
 	 		//std::cout << op.usub << endl;
 	 		break;
 	 	case Instruction::subi:
-	 		Subi();
+            Subi(i, m);
 	 		//std::cout << op.usubi << endl;
 	 		break;
 	 	case Instruction::mult:
-	 		 Mult();
+             Mult(i, m);
 	 		//std::cout << op.umult << endl;
 	 		break;
 	 	case Instruction::multi:
-	 		Multi();
+            Multi(i, m);
 	 		//std::cout << op.umulti << endl;
 	 		break;
 	 	case Instruction::div:
-	 		Div();
+            Div(i, m);
 	 		//std::cout << op.udiv << endl;
 	 		break;
 	 	case Instruction::divi:
-	 		Divi();
+            Divi(i, m);
 	 		//std::cout << op.udivi << endl;
 	 		break;
 	 	case Instruction::load:
-	 		Load();
+            Load(i, m);
 	 		//std::cout << op.uload << endl;
 	 		break;
 	 	case Instruction::store:
-	 		Store();
+            Store(i, m);
 	 		//std::cout << op.ustore << endl;
 	 		break;
 	 	case Instruction::bnez:
-	 		Bnez();
+            Bnez(i, m);
 	 		//std::cout << op.ubnez << endl;
 	 		break;
 	 	case Instruction::beqz:
-	 		Beqz();
+            Beqz(i, m);
 	 		//std::cout << op.ubeqz << endl;
 	 		break;
 	 	case Instruction::jump:
-	 		Jump();
+            Jump(i, m);
 	 		//std::cout << op.ujump << endl;
 	 		break;
 	 	default:
 	 		break;
-	 }
-
-	return 0;
+     }
 };

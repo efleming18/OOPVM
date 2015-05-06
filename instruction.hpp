@@ -6,6 +6,8 @@
 
 #include <vector>
 
+class machine;
+
 struct Arithmetic_inst 
 {
 	int write_reg;
@@ -39,7 +41,7 @@ struct Access
 
 struct Instruction
 {
- typedef enum { add, addi, sub, subi, mult, multi, div, divi, load, store, bnez, beqz, jump } type;
+ enum { add, addi, sub, subi, mult, multi, div, divi, load, store, bnez, beqz, jump } type;
  union 
  	{
 	 	Immd_arithmetic_inst iai;
@@ -49,6 +51,8 @@ struct Instruction
 	 	Access ac;
 	 } op;
 };
+
+void execute(Instruction i, machine* m);
 
 typedef std::vector<Instruction> Program;
 
