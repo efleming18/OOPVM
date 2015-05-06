@@ -195,6 +195,10 @@ int main(int argc, char* argv[]){
 					break;
 			}
 			std::cout << std::endl;
+			//reset
+			in.op.ai.write_reg = 0;
+			in.op.ai.reg_a = 0;
+			in.op.ai.reg_b = 0;
 		}
 
 		//Once done, output data to byte
