@@ -151,7 +151,6 @@ int main(int argc, char* argv[]){
 					std::cout << in1 << std::endl;
 					std::cout << in2 << std::endl;
 					in.op.iai.write_reg = out;
-					std::cout << in.op.iai.write_reg << std::endl;
 					in.op.iai.reg_a = in1;
 					in.op.iai.immd = in2;
 					instructionList.push_back(in);
