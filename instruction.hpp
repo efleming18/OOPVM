@@ -39,7 +39,7 @@ struct Access
 
 struct Instruction
 {
- enum { add, addi, sub, subi, mult, multi, div, divi, load, store, bnez, beqz, jump } type;
+ typedef enum { add, addi, sub, subi, mult, multi, div, divi, load, store, bnez, beqz, jump } type;
  union 
  	{
 	 	Immd_arithmetic_inst iai;
