@@ -6,7 +6,6 @@
 
 #include <vector>
 
-
 struct Arithmetic_inst 
 {
 	int write_reg;
@@ -51,6 +50,7 @@ struct Instruction
 	 } op;
 };
 
+typedef std::vector<Instruction> Program;
 
 /*
 struct instruction
