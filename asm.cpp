@@ -10,8 +10,8 @@ struct Binary_output_file
   Binary_output_file(const char* f)
     : file(fopen(f, "wb"))
   {
-    if (!file)
-      throw std::runtime_error("cannot open output file");
+    //if (!file)
+      //throw std::runtime_error("cannot open output file");
   }
 
   ~Binary_output_file()
@@ -80,7 +80,7 @@ int parseImmediate(std::string currentInstruction, int &stringPointer){
 
 int main(int argc, char* argv[]){
 
-	//std::cout << std::endl;
+	std::cout << std::endl;
 	std::ifstream asmFile;
 	char charInstruction[256];
 	std::vector<std::string> instructionVector;
@@ -96,10 +96,10 @@ int main(int argc, char* argv[]){
 		}
 
 		//Need to convert vector of strings to vector of instructions
-		for(int i = 0; i < instructionVector.size(); i++){
+		for(unsigned int i = 0; i < instructionVector.size(); i++){
 			//Get current Instruction from vector
 			currentInstruction = instructionVector[i];
-			//std::cout << currentInstruction << std::endl;
+			std::cout << currentInstruction << std::endl;
 			int stringPointer = 0;
 			std::string instructionType;
 			while(currentInstruction[stringPointer] != ' '){
@@ -123,20 +123,22 @@ int main(int argc, char* argv[]){
 			}else{
 				std::cout << "Unknown Type: " << instructionType << std::endl;
 			}
-			//std::cout << instructionType << " " << ofInstruction << std::endl;
+			std::cout << instructionType << " " << ofInstruction << std::endl;
 			//Now that we know the instruction type, need to get args
 			int out, in1, in2; //all registers
 			Instruction in;
+			in.type = ofInstruction;
 			switch(ofInstruction){
 				case Instruction::add:
 					//This has 3 args, parse them
 					out = parseRegister(currentInstruction,stringPointer);
 					in1 = parseRegister(currentInstruction,stringPointer);
 					in2 = parseRegister(currentInstruction,stringPointer);
-					//std::cout << out << std::endl;
-					//std::cout << in1 << std::endl;
-					//std::cout << in2 << std::endl;
+					std::cout << out << std::endl;
+					std::cout << in1 << std::endl;
+					std::cout << in2 << std::endl;
 					in.op.ai.write_reg = out;
+
 					in.op.ai.reg_a = in1;
 					in.op.ai.reg_b = in2;
 					instructionList.push_back(in);
@@ -146,10 +148,11 @@ int main(int argc, char* argv[]){
 					out = parseRegister(currentInstruction,stringPointer);
 					in1 = parseRegister(currentInstruction,stringPointer);
 					in2 = parseImmediate(currentInstruction,stringPointer);
-					//std::cout << out << std::endl;
-					//std::cout << in1 << std::endl;
-					//std::cout << in2 << std::endl;
+					std::cout << out << std::endl;
+					std::cout << in1 << std::endl;
+					std::cout << in2 << std::endl;
 					in.op.iai.write_reg = out;
+					std::cout << in.op.iai.write_reg << std::endl;
 					in.op.iai.reg_a = in1;
 					in.op.iai.immd = in2;
 					instructionList.push_back(in);
@@ -193,7 +196,7 @@ int main(int argc, char* argv[]){
 					std::cout << "Unknown type of instruction..." << std::endl;
 					break;
 			}
-			//std::cout << std::endl;
+			std::cout << std::endl;
 		}
 
 		//Once done, output data to byte
@@ -201,7 +204,6 @@ int main(int argc, char* argv[]){
 	}else{
 		std::cout << "Error opening file " << argv[1] << "..." << std::endl;
 	}
-
 	//always close file
 	asmFile.close();
 	std::cout << std::endl;
