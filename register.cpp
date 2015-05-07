@@ -6,7 +6,7 @@ registerIF::registerIF()
     : stackReg(0)
     , pcReg(0)
 {
-    data.insert(std::pair<int, int>(0, 1));
+    data.insert(std::pair<int, int>(0, 0));
 }
 
 void registerIF::store(int reg, int val)

@@ -173,14 +173,16 @@ program build(std::string file)
 
     std::vector<int> data;
     std::ifstream f;
-    f.open(file.c_str());
+    f.open(file.c_str(), std::ios::binary);
     assert(f.is_open());
 
     int temp;
-    while (f >> temp)
+    while (!f.eof())
     {
+        f.read((char*)&temp, sizeof(int));
         data.push_back(temp);
     }
+    data.pop_back();
 
     for (unsigned int i = 0; i < data.size(); ++i)
     {
@@ -194,34 +196,30 @@ program build(std::string file)
         case Instruction::mult:
         case Instruction::div:
             inst = buildArith(data.at(i+1), data.at(i+2), data.at(i+3));
-            i += 3;
             break;
         case Instruction::addi:
         case Instruction::subi:
         case Instruction::multi:
         case Instruction::divi:
             inst = buildImmed(data.at(i+1), data.at(i+2), data.at(i+3));
-            i += 3;
             break;
         case Instruction::load:
         case Instruction::store:
             inst = buildAccess(data.at(i+1), data.at(i+2));
-            i += 2;
             break;
         case Instruction::bnez:
         case Instruction::beqz:
             inst = buildBranch(data.at(i+1), data.at(i+2));
-            i += 2;
             break;
         case Instruction::jump:
             inst = buildJump(data.at(i+1));
-            i += 1;
             break;
         default:
             assert(false);
             break;
         }
 
+        i += 3;
         inst.type = t;
         retval.push_back(inst);
     }
