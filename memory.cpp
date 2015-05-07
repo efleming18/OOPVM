@@ -1,3 +1,15 @@
+//
+// Benjamin Riggs
+//
+// University of Akron
+// Object Oriented Programming
+// Dr. Andrew Sutton
+// 5/7/2015
+//
+// Virtual Machine Project
+// Memory Interface
+//
+
 #include "memory.hpp"
 
 #include <cassert>

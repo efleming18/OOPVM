@@ -1,3 +1,15 @@
+//
+// Benjamin Riggs
+//
+// University of Akron
+// Object Oriented Programming
+// Dr. Andrew Sutton
+// 5/7/2015
+//
+// Virtual Machine Project
+// Machine Object
+//
+
 #include "machine.hpp"
 
 #include <cassert>
@@ -20,21 +32,23 @@ registerIF* machine::reg()
 
 void machine::run()
 {
+    // Execute instructions until one can't be obtained
     while (const Instruction* i = fetch())
     {
-        machine temp = *this;
         execute(*i, this);
     }
 }
 
 const Instruction* machine::fetch()
 {
+    // If there is no instruction at the current pc, return NULL
     unsigned int pc = *(reg()->pc());
     if (pc >= prog.size())
     {
         return NULL;
     }
 
+    // Otherwise, return the instruction and increment the pc
     const Instruction* i = &prog.at(pc);
     (*(reg()->pc()))++;
     return i;
